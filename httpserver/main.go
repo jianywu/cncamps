@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 
+	"net/http/pprof"
 	_ "net/http/pprof"
 
 	"github.com/golang/glog"
@@ -18,19 +19,27 @@ func main() {
 	http.HandleFunc("/", rootHandler)
 	c, python, java := true, false, "no!"
 	fmt.Println(c, python, java)
-	err := http.ListenAndServe(":80", nil)
-	// mux := http.NewServeMux()
-	// mux.HandleFunc("/", rootHandler)
-	// mux.HandleFunc("/healthz", healthz)
-	// mux.HandleFunc("/debug/pprof/", pprof.Index)
-	// mux.HandleFunc("/debug/pprof/profile", pprof.Profile)
-	// mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
-	// mux.HandleFunc("/debug/pprof/trace", pprof.Trace)
-	// err := http.ListenAndServe(":80", mux)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", rootHandler)
+	mux.HandleFunc("/healthz", healthz)
+	mux.HandleFunc("/debug/pprof/", pprof.Index)
+	mux.HandleFunc("/debug/pprof/profile", pprof.Profile)
+	mux.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+	mux.HandleFunc("/debug/pprof/trace", pprof.Trace)
+	mux.HandleFunc("/headers", headers)
+	err := http.ListenAndServe(":80", mux)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+}
+
+func headers(w http.ResponseWriter, r *http.Request) {
+	for name, headers := range r.Header {
+		for _, h := range headers {
+			fmt.Fprintf(w, "%v: %v\n", name, h)
+		}
+	}
 }
 
 func healthz(w http.ResponseWriter, r *http.Request) {
