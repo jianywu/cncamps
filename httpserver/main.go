@@ -19,7 +19,6 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", rootHandler)
 	mux.HandleFunc("/healthz", healthz)
-	// mux.HandleFunc("/headers", headers)
 	err := http.ListenAndServe(":80", mux)
 	if err != nil {
 		log.Fatal(err)
@@ -30,7 +29,6 @@ func main() {
 func copyHeader(w http.ResponseWriter, r *http.Request) {
 	for name, headers := range r.Header {
 		for _, h := range headers {
-			// fmt.Fprintf(w, "%v: %v\n", name, h)
 			w.Header().Set(name, h)
 		}
 	}
@@ -57,9 +55,4 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Client IP is:", ip)
 	fmt.Println("Status code is:", w.Header().Get("Status-Code"))
-
-	io.WriteString(w, "===================Details of the http request header:============\n")
-	for k, v := range r.Header {
-		io.WriteString(w, fmt.Sprintf("%s=%s\n", k, v))
-	}
 }
