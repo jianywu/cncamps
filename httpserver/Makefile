@@ -13,4 +13,4 @@ release: build
 
 push: release
 	echo "pushing cncamp/httpserver"
-	docker push cncamp/httpserver:v1.0
+	docker push cncamp/httpserver:${tag}
