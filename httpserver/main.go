@@ -7,12 +7,15 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
 
 	"github.com/golang/glog"
 	"github.com/thinkeridea/go-extend/exnet"
 )
 
 func main() {
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt)
 	flag.Set("v", "4")
 	glog.V(2).Info("Starting http server...")
 	http.HandleFunc("/", rootHandler)
@@ -23,7 +26,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	<-c
+	log.Fatal("Program interrupted")
 }
 
 func copyHeader(w http.ResponseWriter, r *http.Request) {
