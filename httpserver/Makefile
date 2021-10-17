@@ -14,3 +14,7 @@ release: build
 push: release
 	echo "pushing uucad/httpserver"
 	docker push uucad/httpserver:${tag}
+pull:
+	sudo docker pull uucad/httpserver:${tag}
+run:
+	sudo docker run uucad/httpserver:${tag}
