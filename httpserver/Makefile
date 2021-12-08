@@ -1,6 +1,6 @@
-export tag=v1.0
+export tag=v1.1-metrics
 root:
-	export ROOT=github.com/uucads
+	export ROOT=github.com/jianywu/cncamps/httpserver
 
 build:
 	echo "building httpserver binary"
@@ -14,7 +14,9 @@ release: build
 push: release
 	echo "pushing uucad/httpserver"
 	docker push uucad/httpserver:${tag}
+
 pull:
 	sudo docker pull uucad/httpserver:${tag}
+
 run:
 	sudo docker run uucad/httpserver:${tag}
